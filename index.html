@@ -5,19 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禁食チェックアプリ</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-        h1 { color: #333; }
-        .input-area { display: flex; gap: 10px; margin-bottom: 20px; }
-        input[type="text"] { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 8px 15px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
-        #result { margin-top: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 4px; }
-        ul { list-style-type: none; padding-left: 0; }
-        li { background-color: #fbecec; border: 1px solid #f2c7c7; padding: 10px; margin-bottom: 5px; border-radius: 4px; }
-        .no-match { background-color: #e8f5e9; border-color: #c8e6c9; }
+        /* ... 省略 ... */
+        /* ↓これを追加 */
+        #app-container { display: none; }
     </style>
 </head>
 <body>
 
+<script>
+    // --- 簡易パスワード認証 ---
+    const correctPassword = "fureai"; // ← ここに事業所だけの合言葉を設定
+    let count = 0;
+    const maxTries = 3;
+
+    while (count < maxTries) {
+        const input = prompt("合言葉を入力してください:");
+        if (input === null) { // キャンセルされた場合
+            document.body.innerHTML = "<h1>アクセスがキャンセルされました。</h1>";
+            break;
+        }
+        if (input === correctPassword) {
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('app-container').style.display = 'block';
+            });
+            break;
+        } else {
+            count++;
+            if(count < maxTries){
+                alert("合言葉が違います。 (残り " + (maxTries - count) + "回)");
+            }
+        }
+    }
+
+    if (count >= maxTries) {
+        document.body.innerHTML = "<h1>アクセスできませんでした。</h1>";
+    }
+</script>
+
+<!-- ↓ここからがアプリ本体。divで囲む -->
+<div id="app-container">
     <h1>禁食チェックアプリ</h1>
 
     <p>昼食のメニュー名を入力してください。</p>
@@ -32,7 +58,9 @@
             <!-- ここに結果が表示されます -->
         </ul>
     </div>
+</div> <!-- ← ここまで -->
 
-    <script src="script.js"></script>
+
+<script src="script.js"></script>
 </body>
 </html>
